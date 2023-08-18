@@ -5,7 +5,7 @@ import axios from "axios";
 import { useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import Weather from '../components/Weather';
-
+import Spinner from '../components/Spinner'
 
 export default function Home() {
   const [city, setCity] = useState("");
@@ -14,16 +14,23 @@ export default function Home() {
 
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}`;
 
-  const fetchWeather = (e) => {
+  const fetchWeather = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    axios.get(url).then((response) => {
+    try {
+      const response = await axios.get(url);
       setWeather(response.data);
-      console.log(response.data);
-    });
+      //console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching weather:", error);
+    }
     setCity("");
     setLoading(false);
   };
+
+  if(loading) {
+
+  }
 
   return (
     <div>
@@ -60,7 +67,7 @@ export default function Home() {
     
       {/* Weather */}
 
-      {weather.main && <Weather />}
+      {weather.main && <Weather data={weather} />}
 
     </div>
   );
