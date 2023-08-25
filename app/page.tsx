@@ -5,7 +5,19 @@ import axios from "axios";
 import { useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import Weather from '../components/Weather';
-import Spinner from '../components/Spinner'
+import Spinner from '../components/Spinner';
+
+interface weather {
+  main: {
+    
+    feels_like: number;
+    humidity: number;
+    
+  };
+  
+}
+
+
 
 export default function Home() {
   const [city, setCity] = useState("");
@@ -14,8 +26,7 @@ export default function Home() {
 
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}`;
 
-  const fetchWeather = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const fetchWeather = async () => {
     setLoading(true);
     try {
       const response = await axios.get(url);
@@ -27,6 +38,15 @@ export default function Home() {
     setCity("");
     setLoading(false);
   };
+
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await fetchWeather();
+  };
+
+  const handleButtonClick = () => {
+    fetchWeather();
+  }
 
   if(loading) {
     return <Spinner />
@@ -74,3 +94,5 @@ export default function Home() {
   }
 
 }
+
+
